@@ -8,8 +8,7 @@ button:focus-visible, a:focus-visible { outline:3px solid #265fe8; outline-offse
 .eyebrow { margin:0 0 18px; text-transform:uppercase; letter-spacing:.16em; font-size:12px; font-weight:800; }
 
 .site-header { height:78px; padding:0 4vw; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(23,23,18,.35); background:rgba(243,236,223,.95); position:sticky; top:0; z-index:20; backdrop-filter:blur(12px); }
-.brand { font-weight:950; font-size:20px; letter-spacing:-.06em; }
-.brand span { display:block; margin-top:-5px; color:var(--orange); }
+.brand { font:italic 600 34px/1 "Brush Script MT","Segoe Script","Snell Roundhand",Georgia,cursive; letter-spacing:-.04em; }
 .site-header nav { display:flex; gap:34px; font-size:13px; font-weight:700; }
 .site-header nav a:hover { color:var(--orange); }
 .header-cta { border:1px solid var(--ink); padding:12px 16px; text-transform:uppercase; font-size:11px; letter-spacing:.1em; font-weight:800; }
