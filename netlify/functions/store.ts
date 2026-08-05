@@ -1,8 +1,6 @@
-import { getStore } from "@netlify/blobs";
+import { getDeployStore, getStore } from "@netlify/blobs";
 import { getUser } from "@netlify/identity";
-import type { Config } from "@netlify/functions";
-
-const catalogue = getStore({ name: "muse-prints-catalogue", consistency: "strong" });
+import type { Config, Context } from "@netlify/functions";
 
 const json = (value: unknown, status = 200) =>
   Response.json(value, { status, headers: { "Cache-Control": "no-store" } });
@@ -16,7 +14,12 @@ const validStore = (value: unknown) => {
     Array.isArray(store.artworks);
 };
 
-export default async (request: Request) => {
+const catalogueFor = (context: Context) => context.deploy.context === "production"
+  ? getStore({ name: "muse-prints-catalogue", consistency: "strong" })
+  : getDeployStore({ name: "muse-prints-catalogue", consistency: "strong" });
+
+export default async (request: Request, context: Context) => {
+  const catalogue = catalogueFor(context);
   if (request.method === "GET") {
     const saved = await catalogue.get("store", { type: "json" });
     if (saved) return json(saved);
