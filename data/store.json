@@ -1,0 +1,72 @@
+{
+  "whatsappNumber": "",
+  "currency": "₦",
+  "printSizes": [
+    { "label": "A4", "dimensions": "21 × 29.7 cm", "price": 18000 },
+    { "label": "A3", "dimensions": "29.7 × 42 cm", "price": 28000 },
+    { "label": "A2", "dimensions": "42 × 59.4 cm", "price": 46000 },
+    { "label": "Custom", "dimensions": "Made to your space", "price": null }
+  ],
+  "artworks": [
+    {
+      "id": "after-the-rain",
+      "title": "After the Rain",
+      "story": "A quiet study of colour, memory and the softness that follows a storm.",
+      "originalSize": "Original: A0",
+      "image": "",
+      "palette": "linear-gradient(145deg, #173f4f 0%, #61aab1 44%, #f0b35f 45%, #ed6847 100%)",
+      "accent": "#d6ff45",
+      "active": true
+    },
+    {
+      "id": "soft-power",
+      "title": "Soft Power",
+      "story": "Tenderness rendered as strength, with warm forms that hold their ground.",
+      "originalSize": "Original: A1",
+      "image": "",
+      "palette": "radial-gradient(circle at 65% 35%, #f6d8b8 0 15%, #e47258 16% 35%, #622f55 36% 62%, #231728 63%)",
+      "accent": "#ff875f",
+      "active": true
+    },
+    {
+      "id": "homecoming",
+      "title": "Homecoming",
+      "story": "A layered portrait of belonging, movement and the places that call us back.",
+      "originalSize": "Original: A0",
+      "image": "",
+      "palette": "linear-gradient(125deg, #f3b54a 0 24%, #152d2c 25% 48%, #eb6849 49% 73%, #e7d7bd 74%)",
+      "accent": "#f3b54a",
+      "active": true
+    },
+    {
+      "id": "blue-hour",
+      "title": "Blue Hour",
+      "story": "That brief electric pause between daylight and nightfall, held on paper.",
+      "originalSize": "Original: A2",
+      "image": "",
+      "palette": "radial-gradient(ellipse at 35% 70%, #6da9d2 0 12%, #213d73 13% 42%, #0b1638 43% 70%, #df674c 71%)",
+      "accent": "#72b7ed",
+      "active": true
+    },
+    {
+      "id": "orange-room",
+      "title": "The Orange Room",
+      "story": "Heat, conversation and familiar objects gathered into one vivid interior.",
+      "originalSize": "Original: A1",
+      "image": "",
+      "palette": "linear-gradient(35deg, #7f2924 0 23%, #ef5e32 24% 55%, #f3af42 56% 76%, #2c3b38 77%)",
+      "accent": "#ff6b3d",
+      "active": true
+    },
+    {
+      "id": "growth-patterns",
+      "title": "Growth Patterns",
+      "story": "Organic shapes repeat, break apart and begin again in their own rhythm.",
+      "originalSize": "Original: A0",
+      "image": "",
+      "palette": "repeating-radial-gradient(circle at 25% 25%, #d7ff51 0 9%, #285d4d 10% 21%, #f3e3c1 22% 32%)",
+      "accent": "#d7ff51",
+      "active": true
+    }
+  ]
+}
