@@ -1,11 +1,15 @@
-import { getStore } from "@netlify/blobs";
+import { getDeployStore, getStore } from "@netlify/blobs";
 import { getUser } from "@netlify/identity";
 import type { Config, Context } from "@netlify/functions";
 
-const images = getStore({ name: "muse-prints-images", consistency: "strong" });
 const json = (value: unknown, status = 200) => Response.json(value, { status });
 
+const imagesFor = (context: Context) => context.deploy.context === "production"
+  ? getStore({ name: "muse-prints-images", consistency: "strong" })
+  : getDeployStore({ name: "muse-prints-images", consistency: "strong" });
+
 export default async (request: Request, context: Context) => {
+  const images = imagesFor(context);
   const key = context.params.key;
 
   if (request.method === "GET" && key) {
