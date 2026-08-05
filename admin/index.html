@@ -5,9 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex" />
     <title>MUSE PRINTS — Owner Dashboard</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/admin/admin.css" />
   </head>
   <body>
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-    <script src="https://unpkg.com/decap-cms@^3.8.0/dist/decap-cms.js"></script>
+    <main id="admin-app" aria-live="polite">
+      <p class="loading">Opening owner dashboard…</p>
+    </main>
+    <script type="module" src="/admin/admin.js"></script>
   </body>
 </html>
