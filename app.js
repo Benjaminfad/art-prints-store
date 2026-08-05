@@ -108,7 +108,8 @@ function productCard(store, artwork, number) {
 
 async function loadStore() {
   try {
-    const response = await fetch("/data/store.json", { cache: "no-store" });
+    let response = await fetch("/api/store", { cache: "no-store" });
+    if (!response.ok) response = await fetch("/data/store.json", { cache: "no-store" });
     if (!response.ok) throw new Error("Could not load store data");
     const store = await response.json();
     grid.replaceChildren(...store.artworks.filter((artwork) => artwork.active !== false).map((artwork, index) => productCard(store, artwork, index + 1)));
@@ -116,12 +117,6 @@ async function loadStore() {
     console.error(error);
     grid.innerHTML = '<p class="load-error">The collection could not be loaded. Please refresh the page.</p>';
   }
-}
-
-if (window.netlifyIdentity) {
-  window.netlifyIdentity.on("init", (user) => {
-    if (!user && window.location.hash.startsWith("#invite_token")) window.netlifyIdentity.open();
-  });
 }
 
 loadStore();
