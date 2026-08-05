@@ -12,7 +12,7 @@ year.textContent = new Date().getFullYear();
 const money = (currency, value) => `${currency}${Number(value).toLocaleString("en-NG")}`;
 
 function orderLink(store, artwork, size) {
-  const price = size.price ? money(store.currency, size.price) : "Please send me a quote";
+  const price = typeof size.price === "number" ? money(store.currency, size.price) : "Please send me a quote";
   const message = [
     "Hi! I would like to order an art print.",
     `Artwork: ${artwork.title}`,
@@ -44,6 +44,7 @@ function artworkVisual(artwork, number) {
 }
 
 function productCard(store, artwork, number) {
+  const printSizes = Array.isArray(artwork.printSizes) ? artwork.printSizes : (store.printSizes || []);
   const card = document.createElement("article");
   card.className = "product-card";
 
@@ -80,13 +81,13 @@ function productCard(store, artwork, number) {
   order.rel = "noreferrer";
 
   function selectSize(index) {
-    const size = store.printSizes[index];
+    const size = printSizes[index];
     picker.querySelectorAll("button").forEach((button, buttonIndex) => {
       button.classList.toggle("active", buttonIndex === index);
       button.setAttribute("aria-pressed", String(buttonIndex === index));
     });
     dimensions.textContent = size.dimensions;
-    price.textContent = size.price ? money(store.currency, size.price) : "Get a quote";
+    price.textContent = typeof size.price === "number" ? money(store.currency, size.price) : "Get a quote";
     if (store.whatsappNumber) {
       order.href = orderLink(store, artwork, size);
       order.removeAttribute("aria-disabled");
@@ -98,7 +99,7 @@ function productCard(store, artwork, number) {
     }
   }
 
-  store.printSizes.forEach((size, index) => {
+  printSizes.forEach((size, index) => {
     const button = document.createElement("button");
     button.type = "button";
     button.textContent = size.label;
@@ -108,7 +109,13 @@ function productCard(store, artwork, number) {
 
   copy.append(picker, selection, order);
   card.append(artFrame, copy);
-  selectSize(0);
+  if (printSizes.length) {
+    selectSize(0);
+  } else {
+    dimensions.textContent = "No print size available";
+    order.setAttribute("aria-disabled", "true");
+    order.textContent = "Unavailable";
+  }
   return card;
 }
 
