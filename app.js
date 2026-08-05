@@ -1,3 +1,9 @@
+const authCallbackPattern = /^#(confirmation_token|recovery_token|invite_token|email_change_token|access_token)=/;
+
+if (authCallbackPattern.test(window.location.hash)) {
+  window.location.replace(`/admin/${window.location.hash}`);
+}
+
 const grid = document.querySelector("#product-grid");
 const year = document.querySelector("#year");
 
