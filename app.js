@@ -72,7 +72,6 @@ function productCard(store, artwork, number) {
   order.className = "order-button";
   order.target = "_blank";
   order.rel = "noreferrer";
-  order.innerHTML = "Order on WhatsApp <span>↗</span>";
 
   function selectSize(index) {
     const size = store.printSizes[index];
@@ -82,7 +81,15 @@ function productCard(store, artwork, number) {
     });
     dimensions.textContent = size.dimensions;
     price.textContent = size.price ? money(store.currency, size.price) : "Get a quote";
-    order.href = orderLink(store, artwork, size);
+    if (store.whatsappNumber) {
+      order.href = orderLink(store, artwork, size);
+      order.removeAttribute("aria-disabled");
+      order.innerHTML = "Order on WhatsApp <span>↗</span>";
+    } else {
+      order.removeAttribute("href");
+      order.setAttribute("aria-disabled", "true");
+      order.textContent = "WhatsApp number not set";
+    }
   }
 
   store.printSizes.forEach((size, index) => {
