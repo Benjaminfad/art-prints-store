@@ -1,4 +1,12 @@
-import { acceptInvite, getUser, handleAuthCallback, login, logout } from "@netlify/identity";
+import {
+  acceptInvite,
+  getUser,
+  handleAuthCallback,
+  login,
+  logout,
+  requestPasswordRecovery,
+  updateUser,
+} from "@netlify/identity";
 
 const app = document.querySelector("#admin-app");
 let store = null;
@@ -20,7 +28,17 @@ function notice(message, error = false) {
 
 function authScreen(mode = "login", token = "") {
   const invited = mode === "invite";
-  app.innerHTML = `<section class="auth-wrap"><div class="auth-card"><div class="brand">MUSE<span>PRINTS</span></div><h1>${invited ? "Set your owner password." : "Owner dashboard."}</h1><p>${invited ? "Create a password to accept your private dashboard invitation." : "Sign in with the email invited from your Netlify project."}</p><form class="auth-form"><div class="field"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" ${invited ? "disabled" : "required"}></div><div class="field"><label for="password">Password</label><input id="password" name="password" type="password" autocomplete="${invited ? "new-password" : "current-password"}" minlength="8" required></div><button class="button" type="submit">${invited ? "Accept invitation" : "Sign in"}</button><p id="auth-error" role="alert"></p></form></div></section>`;
+  const recovering = mode === "recovery";
+  const settingPassword = invited || recovering;
+  const heading = invited ? "Set your owner password." : recovering ? "Choose a new password." : "Owner dashboard.";
+  const description = invited
+    ? "Create a password to accept your private dashboard invitation."
+    : recovering
+      ? "Enter the new password you want to use for your owner account."
+      : "Sign in with the email invited from your Netlify project.";
+  const action = invited ? "Accept invitation" : recovering ? "Save new password" : "Sign in";
+
+  app.innerHTML = `<section class="auth-wrap"><div class="auth-card"><div class="brand">MUSE<span>PRINTS</span></div><h1>${heading}</h1><p>${description}</p><form class="auth-form">${settingPassword ? "" : '<div class="field"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required></div>'}<div class="field"><label for="password">${settingPassword ? "New password" : "Password"}</label><input id="password" name="password" type="password" autocomplete="${settingPassword ? "new-password" : "current-password"}" minlength="8" required></div><button class="button" type="submit">${action}</button>${settingPassword ? "" : '<button class="button secondary" id="forgot-password" type="button">Forgot password?</button>'}<p id="auth-error" role="alert"></p></form></div></section>`;
   app.querySelector("form").addEventListener("submit", async (event) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
@@ -29,7 +47,9 @@ function authScreen(mode = "login", token = "") {
     button.disabled = true;
     error.textContent = "";
     try {
-      currentUser = invited ? await acceptInvite(token, form.get("password")) : await login(form.get("email"), form.get("password"));
+      if (invited) currentUser = await acceptInvite(token, form.get("password"));
+      else if (recovering) currentUser = await updateUser({ password: form.get("password") });
+      else currentUser = await login(form.get("email"), form.get("password"));
       history.replaceState(null, "", "/admin/");
       await openDashboard();
     } catch (cause) {
@@ -37,6 +57,21 @@ function authScreen(mode = "login", token = "") {
       button.disabled = false;
     }
   });
+
+  if (!settingPassword) {
+    app.querySelector("#forgot-password").addEventListener("click", async () => {
+      const email = app.querySelector("#email");
+      const error = app.querySelector("#auth-error");
+      if (!email.reportValidity()) return;
+      error.textContent = "Sending password reset email…";
+      try {
+        await requestPasswordRecovery(email.value.trim());
+        error.textContent = "Check your email for the password reset link.";
+      } catch (cause) {
+        error.textContent = cause?.message || "Could not send the password reset email.";
+      }
+    });
+  }
 }
 
 function sizeRow(size = { label: "", dimensions: "", price: null }) {
@@ -149,6 +184,10 @@ async function start() {
   try {
     const callback = await handleAuthCallback();
     if (callback?.type === "invite") return authScreen("invite", callback.token);
+    if (callback?.type === "recovery") {
+      currentUser = callback.user;
+      return authScreen("recovery");
+    }
     currentUser = callback?.user || await getUser();
     if (!currentUser) return authScreen();
     await openDashboard();
